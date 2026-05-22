@@ -267,6 +267,6 @@ export const translations = {
       ribbonBtn: 'اطلب استشارة',
     },
   },
-} as const;
+};
 
-export type Dict = typeof translations.en;
+export type Dict = (typeof translations)['en'];
