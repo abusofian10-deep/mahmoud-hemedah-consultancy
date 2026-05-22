@@ -1,5 +1,4 @@
 export type Locale = 'en' | 'ar';
-type Tr = any;
 
 export const translations = {
   en: {
