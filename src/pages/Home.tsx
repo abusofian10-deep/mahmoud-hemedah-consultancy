@@ -1,163 +1,160 @@
 import { motion } from 'framer-motion';
-import { photographerInfo } from '@/data/photographer';
-import { getFeaturedProjects } from '@/data/projects';
-import { ProjectCard } from '@/components/portfolio/ProjectCard';
-import { ScrollIndicator } from '@/components/ui/ScrollIndicator';
-import { ScrollReveal } from '@/components/ui/ScrollReveal';
-import { SEOHead } from '@/components/seo/SEOHead';
-import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ArrowRight, Building2, Cpu, ShieldCheck, Landmark } from 'lucide-react';
+import { useI18n } from '@/i18n/I18nProvider';
+import { Button } from '@/components/ui/button';
 
-/**
- * Homepage with immersive hero section and featured projects grid
- * Showcases photographer's best work with minimal, elegant design
- */
 export default function Home() {
-  const featuredProjects = getFeaturedProjects();
+  const { t, locale } = useI18n();
+  const isRTL = locale === 'ar';
 
   return (
     <>
-      <SEOHead />
-      
-      <div className="min-h-screen">
-        {/* Hero Section - Full viewport with featured image */}
-      <section className="relative h-screen w-full overflow-hidden">
-        {/* Background Video */}
-        <div className="absolute inset-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            poster="https://images.pexels.com/videos/2675516/free-video-2675516.jpg?auto=compress&cs=tinysrgb&fit=crop&h=630&w=1200"
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              const target = e.currentTarget;
-              target.style.opacity = '0';
-            }}
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-executive text-primary-foreground">
+        <div className="absolute inset-0 opacity-[0.06] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle at 20% 20%, #fff 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+        <div className="absolute -top-32 -end-32 size-[500px] rounded-full bg-gold/10 blur-3xl" />
+        <div className="container-page relative pt-24 pb-32 md:pt-32 md:pb-40">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="max-w-3xl"
           >
-            <source src="https://videos.pexels.com/video-files/2675516/2675516-sd_960_540_24fps.mp4" type="video/mp4" />
-          </video>
-          {/* Video from Pexels */}
-          {/* Gradient Overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+            <div className="flex items-center gap-3 mb-6">
+              <span className="gold-rule" />
+              <span className="text-xs uppercase tracking-[0.3em] text-gold">{t.hero.eyebrow}</span>
+            </div>
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl leading-[1.05] mb-8">
+              {t.hero.title}
+            </h1>
+            <p className="text-lg md:text-xl text-primary-foreground/75 leading-relaxed max-w-2xl mb-10">
+              {t.hero.subtitle}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link to="/contact">
+                <Button size="lg" className="rounded-none bg-gold text-primary hover:bg-gold/90 px-8 h-12">
+                  {t.hero.ctaPrimary}
+                  <ArrowRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
+                </Button>
+              </Link>
+              <Link to="/services">
+                <Button size="lg" variant="outline" className="rounded-none bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 px-8 h-12">
+                  {t.hero.ctaSecondary}
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative h-full flex flex-col items-center justify-center px-6">
-          <motion.div
-            className="text-center space-y-6 max-w-4xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <motion.h1
-              className="text-6xl md:text-8xl lg:text-9xl font-extralight tracking-widest text-white"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-            >
-              {photographerInfo.name.toUpperCase()}
-            </motion.h1>
-            
-            <motion.p
-              className="text-xl md:text-2xl font-light tracking-wide text-white/90"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.4 }}
-            >
-              {photographerInfo.tagline}
-            </motion.p>
-
-            <motion.p
-              className="text-base md:text-lg font-light leading-relaxed text-white/80 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6 }}
-            >
-              {photographerInfo.heroIntroduction}
-            </motion.p>
-          </motion.div>
-
-          {/* Scroll Indicator */}
-          <motion.div
-            className="absolute bottom-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-          >
-            <ScrollIndicator />
-          </motion.div>
+        {/* Stat strip */}
+        <div className="relative border-t border-primary-foreground/10 bg-surface-deep/40 backdrop-blur">
+          <div className="container-page grid grid-cols-1 md:grid-cols-3">
+            {[t.hero.stat1, t.hero.stat2, t.hero.stat3].map((s, i) => (
+              <div key={i} className="py-8 md:py-10 md:px-8 border-b md:border-b-0 md:border-e border-primary-foreground/10 last:border-0">
+                <div className="font-display text-3xl md:text-4xl text-gold mb-1">{s.value}</div>
+                <div className="text-xs uppercase tracking-[0.2em] text-primary-foreground/60">{s.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-        {/* Introduction Section */}
-        <section className="py-24 md:py-32 px-6 lg:px-8 bg-background">
-          <div className="max-w-4xl mx-auto text-center space-y-8">
-            <ScrollReveal>
-              <div className="space-y-6">
-            <h2 className="text-3xl md:text-4xl font-light tracking-wide">
-              About My Work
+      {/* PHILOSOPHY teaser */}
+      <section className="py-24 md:py-32 bg-background">
+        <div className="container-page grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-4">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="gold-rule" />
+              <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{t.about.eyebrow}</span>
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl leading-tight text-foreground">
+              {t.about.title}
             </h2>
-            <div className="space-y-4 text-lg font-light leading-relaxed text-muted-foreground">
-              <p>
-                {photographerInfo.biography.split('\n\n')[0]}
-              </p>
-            </div>
-                <Link
-                  to="/about"
-                  className="inline-flex items-center gap-2 text-base font-light tracking-wide text-foreground hover:text-muted-foreground transition-colors group"
-                >
-                  <span>Learn More About Me</span>
-                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </ScrollReveal>
           </div>
-        </section>
+          <div className="md:col-span-8 space-y-6 text-lg leading-relaxed text-muted-foreground">
+            <p className="text-foreground/90">{t.about.lead}</p>
+            <p>{t.about.body1}</p>
+            <Link to="/about" className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-foreground border-b border-gold pb-1 hover:text-gold transition">
+              {t.nav.about}
+              <ArrowRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
+            </Link>
+          </div>
+        </div>
+      </section>
 
-        {/* Featured Projects Section */}
-        <section className="py-24 md:py-32 border-t border-border">
-          {/* Section Header */}
-          <ScrollReveal>
-            <div className="text-center mb-16 space-y-4 px-6">
-              <h2 className="text-4xl md:text-5xl font-light tracking-wide">
-                Featured Projects
-              </h2>
-              <p className="text-lg text-muted-foreground font-light tracking-wide">
-                A selection of recent work
-              </p>
+      {/* SERVICES preview */}
+      <section className="py-24 md:py-32 bg-secondary/5 border-y border-border">
+        <div className="container-page">
+          <div className="max-w-2xl mb-16">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="gold-rule" />
+              <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{t.services.eyebrow}</span>
             </div>
-          </ScrollReveal>
+            <h2 className="font-display text-3xl md:text-5xl text-foreground mb-4">{t.services.title}</h2>
+            <p className="text-muted-foreground text-lg">{t.services.lead}</p>
+          </div>
 
-          {/* Projects Grid - Edge to edge with minimal gaps */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4">
-            {featuredProjects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                aspectRatio="landscape"
-                showCategory={true}
-                index={index}
-              />
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              { tag: t.services.pillarA.tag, title: t.services.pillarA.title, items: t.services.pillarA.items, Icon: Landmark },
+              { tag: t.services.pillarB.tag, title: t.services.pillarB.title, items: t.services.pillarB.items, Icon: Cpu },
+            ].map(({ tag, title, items, Icon }, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="bg-card border border-border p-10 shadow-soft"
+              >
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.3em] text-gold mb-2">{tag}</div>
+                    <h3 className="font-display text-2xl md:text-3xl text-foreground">{title}</h3>
+                  </div>
+                  <Icon className="size-8 text-gold/70" strokeWidth={1.25} />
+                </div>
+                <ul className="space-y-3">
+                  {items.slice(0, 4).map((it: any, i: number) => (
+                    <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
+                      <span className="size-1 bg-gold rounded-full mt-2 shrink-0" />
+                      <span>{it.title}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
             ))}
           </div>
 
-          {/* View All Link */}
-          <ScrollReveal delay={0.4}>
-            <div className="flex justify-center mt-16 px-6">
-              <Link
-                to="/portfolio"
-                className="group inline-flex items-center gap-2 text-lg font-light tracking-wide text-foreground hover:text-muted-foreground transition-colors"
-              >
-                <span>View All Projects</span>
-                <ArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-          </ScrollReveal>
-        </section>
-      </div>
+          <div className="mt-12 flex justify-center">
+            <Link to="/services" className="inline-flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-foreground border-b border-gold pb-1 hover:text-gold transition">
+              {t.nav.services}
+              <ArrowRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Ribbon */}
+      <section className="py-20 bg-executive text-primary-foreground relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(ellipse at center, hsl(38 48% 52%) 0%, transparent 70%)' }} />
+        <div className="container-page relative grid md:grid-cols-12 gap-8 items-center">
+          <div className="md:col-span-8">
+            <h3 className="font-display text-3xl md:text-4xl mb-3">{t.cta.ribbonTitle}</h3>
+            <p className="text-primary-foreground/75 text-lg max-w-xl">{t.cta.ribbonBody}</p>
+          </div>
+          <div className="md:col-span-4 md:text-end">
+            <Link to="/contact">
+              <Button size="lg" className="rounded-none bg-gold text-primary hover:bg-gold/90 px-8 h-12">
+                {t.cta.ribbonBtn}
+                <ArrowRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
