@@ -1,177 +1,82 @@
 import { motion } from 'framer-motion';
-import { Instagram, Linkedin } from 'lucide-react';
-import { photographerInfo } from '@/data/photographer';
-import { Separator } from '@/components/ui/separator';
-import { SEOHead } from '@/components/seo/SEOHead';
+import { Link } from 'react-router-dom';
+import { ArrowRight, GraduationCap, MapPinned, Briefcase } from 'lucide-react';
+import { useI18n } from '@/i18n/I18nProvider';
+import { Button } from '@/components/ui/button';
 
-/**
- * About page with photographer biography and professional information
- * Features split layout with portrait video and comprehensive biography
- */
 export default function About() {
+  const { t, locale } = useI18n();
+  const isRTL = locale === 'ar';
+
   return (
     <>
-      <SEOHead
-        title="About"
-        description={`Learn about ${photographerInfo.name}, ${photographerInfo.tagline}. ${photographerInfo.biography.split('\n\n')[0]}`}
-        image={photographerInfo.portraitImage}
-      />
-      
-      <div className="min-h-screen">
-        {/* Hero Section */}
-      <section className="py-24 md:py-32 px-6 lg:px-8 border-b border-border">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <motion.div
-            initial={{ opacity: 0.8, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-wide mb-4">
-              About
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
-              Photographer & Visual Storyteller
-            </p>
-          </motion.div>
+      <section className="bg-executive text-primary-foreground py-24 md:py-32">
+        <div className="container-page max-w-4xl">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="gold-rule" />
+            <span className="text-xs uppercase tracking-[0.3em] text-gold">{t.about.eyebrow}</span>
+          </div>
+          <h1 className="font-display text-4xl md:text-6xl leading-tight mb-8">{t.about.title}</h1>
+          <p className="text-xl text-primary-foreground/80 leading-relaxed">{t.about.lead}</p>
         </div>
       </section>
 
-      {/* Portrait and Biography - Split Layout */}
-      <section className="py-16 md:py-24 px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
-            {/* Portrait Image */}
-            <motion.div
-              className="space-y-6"
-              initial={{ opacity: 0.8, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="aspect-[3/4] relative overflow-hidden rounded-sm bg-muted">
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  poster="https://images.pexels.com/videos/3888252/afro-hair-fashion-model-3888252.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=630&w=1200"
-                  className="absolute inset-0 w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    target.style.display = 'none';
-                  }}
-                >
-                  <source src="https://videos.pexels.com/video-files/3888252/3888252-sd_426_226_25fps.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-                {/* Video from Pexels */}
-              </div>
-              
-              {/* Social Links */}
-              <div className="flex items-center gap-4">
-                {photographerInfo.socialLinks.instagram && (
-                  <a
-                    href={photographerInfo.socialLinks.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 border border-border rounded-sm hover:bg-accent transition-colors"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="size-5" />
-                  </a>
-                )}
-                {photographerInfo.socialLinks.linkedin && (
-                  <a
-                    href={photographerInfo.socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 border border-border rounded-sm hover:bg-accent transition-colors"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="size-5" />
-                  </a>
-                )}
-                {photographerInfo.socialLinks.behance && (
-                  <a
-                    href={photographerInfo.socialLinks.behance}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 border border-border rounded-sm hover:bg-accent transition-colors"
-                    aria-label="Behance"
-                  >
-                    <svg
-                      className="size-5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M3 8h6a3 3 0 0 1 0 6H3V8z" />
-                      <path d="M3 14h7a3 3 0 0 1 0 6H3v-6z" />
-                      <path d="M14 7h7" />
-                      <path d="M17 8a3 3 0 1 1 0 6 3 3 0 0 1 0-6z" />
-                    </svg>
-                  </a>
-                )}
-              </div>
-            </motion.div>
-
-            {/* Biography and Info */}
-            <motion.div
-              className="space-y-8"
-              initial={{ opacity: 0.8, x: 10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-            >
-              {/* Name and Tagline */}
-              <div className="space-y-3">
-                <h2 className="text-4xl md:text-5xl font-light tracking-wide">
-                  {photographerInfo.name}
-                </h2>
-                <p className="text-xl text-muted-foreground font-light tracking-wide">
-                  {photographerInfo.tagline}
-                </p>
-              </div>
-
-              <Separator />
-
-              {/* Biography */}
-              <div className="space-y-4">
-                {photographerInfo.biography.split('\n\n').map((paragraph, index) => (
-                  <p
-                    key={index}
-                    className="text-base md:text-lg font-light leading-relaxed text-muted-foreground"
-                  >
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-
-              {/* Contact Info */}
-              <div className="pt-4 space-y-2">
-                <div className="text-sm font-light tracking-wide">
-                  <span className="text-muted-foreground">Email: </span>
-                  <a
-                    href={`mailto:${photographerInfo.email}`}
-                    className="text-foreground hover:text-muted-foreground transition-colors"
-                  >
-                    {photographerInfo.email}
-                  </a>
+      <section className="py-24 bg-background">
+        <div className="container-page grid md:grid-cols-12 gap-12">
+          <div className="md:col-span-7 space-y-6 text-lg leading-relaxed text-muted-foreground">
+            <p className="text-foreground/90 text-xl">{t.about.body1}</p>
+            <p>{t.about.body2}</p>
+          </div>
+          <aside className="md:col-span-5 space-y-6">
+            {[
+              { Icon: GraduationCap, label: locale === 'ar' ? 'التعليم' : 'Education', value: locale === 'ar' ? 'ماجستير إدارة أعمال × 2 — أوروبا والولايات المتحدة' : 'Dual MBA — Europe & United States' },
+              { Icon: Briefcase, label: locale === 'ar' ? 'الخبرة' : 'Experience', value: locale === 'ar' ? '+17 عامًا في المناصب التنفيذية' : '17+ years in executive roles' },
+              { Icon: MapPinned, label: locale === 'ar' ? 'الجغرافيا' : 'Geography', value: locale === 'ar' ? 'مصر · الخليج · سلطنة عُمان' : 'Egypt · Gulf · Sultanate of Oman' },
+            ].map(({ Icon, label, value }, i) => (
+              <div key={i} className="border-s-2 border-gold ps-5 py-2">
+                <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                  <Icon className="size-4 text-gold" strokeWidth={1.5} />
+                  {label}
                 </div>
-                <div className="text-sm font-light tracking-wide">
-                  <span className="text-muted-foreground">Location: </span>
-                  <span className="text-foreground">{photographerInfo.location}</span>
-                </div>
+                <div className="font-display text-lg text-foreground">{value}</div>
               </div>
-            </motion.div>
+            ))}
+          </aside>
+        </div>
+      </section>
+
+      <section className="py-24 bg-secondary/5 border-t border-border">
+        <div className="container-page">
+          <h2 className="font-display text-3xl md:text-4xl text-foreground mb-12">{t.about.pillarsTitle}</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {t.about.pillars.map((p: any, i: number) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="bg-card border border-border p-8 h-full"
+              >
+                <div className="font-display text-5xl text-gold/30 mb-4">0{i + 1}</div>
+                <h3 className="font-display text-xl text-foreground mb-3">{p.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{p.body}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
-      </div>
+
+      <section className="py-20 bg-background">
+        <div className="container-page text-center">
+          <Link to="/contact">
+            <Button size="lg" className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 px-10 h-12">
+              {t.hero.ctaPrimary}
+              <ArrowRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
+            </Button>
+          </Link>
+        </div>
+      </section>
     </>
   );
 }

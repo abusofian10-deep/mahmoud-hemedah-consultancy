@@ -1,143 +1,119 @@
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin } from 'lucide-react';
-import { photographerInfo } from '@/data/photographer';
-import { ContactForm } from '@/components/forms/ContactForm';
-import { Separator } from '@/components/ui/separator';
-import { SEOHead } from '@/components/seo/SEOHead';
+import { useState } from 'react';
+import { z } from 'zod';
+import { Mail, MapPin, Clock, CheckCircle2 } from 'lucide-react';
+import { useI18n } from '@/i18n/I18nProvider';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
-/**
- * Contact page with form and contact information
- * Features validated contact form and availability status
- */
 export default function Contact() {
+  const { t } = useI18n();
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const schema = z.object({
+    name: z.string().trim().min(2, t.contact.form.errorName).max(100),
+    email: z.string().trim().email(t.contact.form.errorEmail).max(255),
+    company: z.string().trim().max(150).optional().or(z.literal('')),
+    role: z.string().trim().max(120).optional().or(z.literal('')),
+    message: z.string().trim().min(10, t.contact.form.errorMessage).max(2000),
+  });
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const result = schema.safeParse(data);
+    if (!result.success) {
+      const errs: Record<string, string> = {};
+      result.error.issues.forEach((iss) => {
+        errs[String(iss.path[0])] = iss.message;
+      });
+      setErrors(errs);
+      return;
+    }
+    setErrors({});
+    setSubmitted(true);
+  }
+
   return (
     <>
-      <SEOHead
-        title="Contact"
-        description={`Get in touch with ${photographerInfo.name} for photography inquiries, collaborations, and project bookings. ${photographerInfo.availability}`}
-      />
-      
-      <div className="min-h-screen">
-        {/* Hero Section */}
-      <section className="py-24 md:py-32 px-6 lg:px-8 border-b border-border">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <motion.div
-            initial={{ opacity: 0.8, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-light tracking-wide mb-4">
-              Get in Touch
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground font-light tracking-wide">
-              Let's discuss your next project
-            </p>
-          </motion.div>
+      <section className="bg-executive text-primary-foreground py-24 md:py-28">
+        <div className="container-page max-w-4xl">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="gold-rule" />
+            <span className="text-xs uppercase tracking-[0.3em] text-gold">{t.contact.eyebrow}</span>
+          </div>
+          <h1 className="font-display text-4xl md:text-6xl leading-tight mb-6">{t.contact.title}</h1>
+          <p className="text-xl text-primary-foreground/80 leading-relaxed">{t.contact.lead}</p>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-16 md:py-24 px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
-            {/* Contact Form */}
-            <motion.div
-              className="space-y-6"
-              initial={{ opacity: 0.8, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="space-y-3">
-                <h2 className="text-3xl md:text-4xl font-light tracking-wide">
-                  Send a Message
-                </h2>
-                <p className="text-muted-foreground font-light">
-                  Fill out the form below and I'll get back to you within 24-48 hours. {photographerInfo.availability}
-                </p>
+      <section className="py-24 bg-background">
+        <div className="container-page grid md:grid-cols-12 gap-12">
+          <aside className="md:col-span-4 space-y-6">
+            {[
+              { Icon: MapPin, value: t.contact.details.location },
+              { Icon: Clock, value: t.contact.details.response },
+              { Icon: Mail, value: 'consult@example.com' },
+            ].map(({ Icon, value }, i) => (
+              <div key={i} className="border-s-2 border-gold ps-5 py-1">
+                <Icon className="size-5 text-gold mb-2" strokeWidth={1.5} />
+                <div className="text-foreground">{value}</div>
               </div>
-
-              <ContactForm />
-            </motion.div>
-
-            {/* Contact Information */}
-            <motion.div
-              className="space-y-8"
-              initial={{ opacity: 0.8, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-            >
-              <div className="space-y-3">
-                <h2 className="text-3xl md:text-4xl font-light tracking-wide">
-                  Contact Information
-                </h2>
-                <p className="text-muted-foreground font-light">
-                  Prefer to reach out directly? Here's how you can contact me.
-                </p>
+            ))}
+            <div className="bg-secondary/10 border border-border p-6 mt-8">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                {t.contact.details.availability}
               </div>
+            </div>
+          </aside>
 
-              <Separator />
-
-              {/* Contact Details */}
-              <div className="space-y-6">
-                {/* Email */}
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-sm bg-accent">
-                    <Mail className="size-5 text-muted-foreground" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-light tracking-wide text-muted-foreground">
-                      Email
-                    </p>
-                    <a
-                      href={`mailto:${photographerInfo.email}`}
-                      className="text-base md:text-lg font-light hover:text-muted-foreground transition-colors"
-                    >
-                      {photographerInfo.email}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Phone */}
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-sm bg-accent">
-                    <Phone className="size-5 text-muted-foreground" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-light tracking-wide text-muted-foreground">
-                      Phone
-                    </p>
-                    <a
-                      href={`tel:${photographerInfo.phone}`}
-                      className="text-base md:text-lg font-light hover:text-muted-foreground transition-colors"
-                    >
-                      {photographerInfo.phone}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Location */}
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-sm bg-accent">
-                    <MapPin className="size-5 text-muted-foreground" />
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm font-light tracking-wide text-muted-foreground">
-                      Location
-                    </p>
-                    <p className="text-base md:text-lg font-light">
-                      {photographerInfo.location}
-                    </p>
-                  </div>
-                </div>
+          <div className="md:col-span-8">
+            {submitted ? (
+              <div className="bg-card border border-border p-10 text-center space-y-4 shadow-soft">
+                <CheckCircle2 className="size-12 text-gold mx-auto" strokeWidth={1.25} />
+                <p className="font-display text-2xl text-foreground">{t.contact.form.success}</p>
               </div>
-            </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="bg-card border border-border p-8 md:p-10 space-y-5 shadow-soft" noValidate>
+                <div className="grid md:grid-cols-2 gap-5">
+                  <Field id="name" label={t.contact.form.name} error={errors.name}>
+                    <Input id="name" name="name" required maxLength={100} className="rounded-none h-11" />
+                  </Field>
+                  <Field id="email" label={t.contact.form.email} error={errors.email}>
+                    <Input id="email" name="email" type="email" required maxLength={255} className="rounded-none h-11" />
+                  </Field>
+                  <Field id="company" label={t.contact.form.company}>
+                    <Input id="company" name="company" maxLength={150} className="rounded-none h-11" />
+                  </Field>
+                  <Field id="role" label={t.contact.form.role}>
+                    <Input id="role" name="role" maxLength={120} className="rounded-none h-11" />
+                  </Field>
+                </div>
+                <Field id="message" label={t.contact.form.message} error={errors.message}>
+                  <Textarea id="message" name="message" required rows={6} maxLength={2000} className="rounded-none" />
+                </Field>
+                <Button type="submit" size="lg" className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 px-10 h-12 w-full md:w-auto">
+                  {t.contact.form.submit}
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       </section>
-
-        {/* Bottom spacing */}
-        <div className="h-16" />
-      </div>
     </>
+  );
+}
+
+function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id} className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        {label}
+      </Label>
+      {children}
+      {error && <p className="text-xs text-destructive">{error}</p>}
+    </div>
   );
 }
