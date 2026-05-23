@@ -194,7 +194,12 @@
   .container-wide { @apply max-w-7xl mx-auto px-6 lg:px-10; }
   .hairline { @apply h-px bg-border; }
   .gold-rule { background: var(--gradient-gold); height: 2px; width: 56px; }
-  .bg-executive { background: var(--gradient-executive); }
+  .bg-executive {
+    background: var(--gradient-executive);
+    --primary-foreground: hsl(43 40% 96%);
+    --color-primary-foreground: hsl(43 40% 96%);
+    color: hsl(43 40% 96%);
+  }
   .text-gold { color: var(--gold); }
   .bg-gold { background: var(--gold); }
   .shadow-elegant { box-shadow: var(--shadow-elegant); }
