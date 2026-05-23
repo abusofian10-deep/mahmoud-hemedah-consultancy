@@ -194,13 +194,11 @@
   .container-wide { @apply max-w-7xl mx-auto px-6 lg:px-10; }
   .hairline { @apply h-px bg-border; }
   .gold-rule { background: var(--gradient-gold); height: 2px; width: 56px; }
-  .bg-executive { background: var(--gradient-executive); color: hsl(43 40% 96%); }
-  .bg-executive .text-primary-foreground { color: hsl(43 40% 96%); }
-  .bg-executive .text-primary-foreground\/75 { color: hsl(43 40% 96% / 0.75); }
-  .bg-executive .text-primary-foreground\/60 { color: hsl(43 40% 96% / 0.60); }
-  .bg-executive .border-primary-foreground\/30 { border-color: hsl(43 40% 96% / 0.30); }
-  .bg-executive .border-primary-foreground\/10 { border-color: hsl(43 40% 96% / 0.10); }
-  .bg-executive .hover\:bg-primary-foreground\/10:hover { background-color: hsl(43 40% 96% / 0.10); }
+  .bg-executive {
+    background: var(--gradient-executive);
+    --primary-foreground: hsl(43 40% 96%);
+    color: hsl(43 40% 96%);
+  }
   .text-gold { color: var(--gold); }
   .bg-gold { background: var(--gold); }
   .shadow-elegant { box-shadow: var(--shadow-elegant); }
