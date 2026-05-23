@@ -197,6 +197,7 @@
   .bg-executive {
     background: var(--gradient-executive);
     --primary-foreground: hsl(43 40% 96%);
+    --color-primary-foreground: hsl(43 40% 96%);
     color: hsl(43 40% 96%);
   }
   .text-gold { color: var(--gold); }
